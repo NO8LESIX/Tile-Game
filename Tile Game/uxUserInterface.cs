@@ -34,18 +34,37 @@ namespace Tile_Game
             uxGameBoard.Height = uxGameBoard.Width + 30;
 
             _game = new GameLogic(_boardHeight, _boardWidth);
-            for (int r = _boardHeight - 1; r > 0; r--)
+
+            for (int r = _boardHeight - 1; r >= 0; r--)
             {
-                for (int c = _boardWidth - 1; c > 0; c--)
+                for (int c = _boardWidth - 1; c >= 0; c--)
                 {
 
                     Label tile = new Label();
                     tile.Width = 60;
                     tile.Height = 60;
 
-                    tile.BackColor = FindColor(_game.GetTile(r,c).Terrain);
-                    tile.Image = FindImage(_game.GetTile(r, c).objectName);
+                    Padding margins = tile.Margin;
+                    margins.Left = 0;
+                    margins.Right = 0;
+                    tile.Margin = margins;
 
+                    tile.Name = _game.GetTile(r,c).Row + "," + _game.GetTile(r, c).Column;
+                    tile.Text = tile.Name;
+
+                    try
+                    {
+                        tile.BackColor = FindColor(_game.GetTile(r, c).Terrain);
+                        tile.Image = FindImage(_game.GetTile(r, c).Unit);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                    uxGameBoard.Controls.Add(tile);
+
+                    tile.Click += new EventHandler(BoardSquare_Click);
                 }
             }
         }
@@ -57,9 +76,9 @@ namespace Tile_Game
         private void RedrawBoard()
         {
             BoardTile currentSquare = null;
-            for (int row = _boardHeight; row > 0; row--)
+            for (int row = _boardHeight; row >= 0; row--)
             {
-                for(int column = _boardWidth; column > 0; column--)
+                for (int column = _boardWidth; column >= 0; column--)
                 {
                     currentSquare = _game.GetTile(row, column);
                     Label square = (Label)uxGameBoard.Controls[currentSquare.Row + "," + currentSquare.Column];
@@ -69,7 +88,7 @@ namespace Tile_Game
                         square.BackColor = Color.Aqua;
                     }
                     else
-                        square.Image = FindImage(_game.GetTile(row,column).objectName);
+                        square.Image = FindImage(_game.GetTile(row, column).Unit);
                 }
             }
         }
@@ -99,7 +118,7 @@ namespace Tile_Game
             switch (unit)
             {
                 case UnitType.Infantry:
-                    return null;
+                    return Image.FromFile(@"(units\black.png)");
                 default:
                     return null;
             }

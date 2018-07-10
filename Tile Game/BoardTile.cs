@@ -40,14 +40,14 @@ namespace Tile_Game
         /// <summary>
         /// Name of the current object
         /// </summary>
-        private UnitType _objectName;
+        private UnitType _unit;
         /// <summary>
         /// Getter and setter methods for the object's name
         /// </summary>
-        public UnitType objectName
+        public UnitType Unit
         {
-            get { return _objectName; }
-            set { _objectName = value; }
+            get { return _unit; }
+            set { _unit = value; }
         }
         /// <summary>
         /// Stores the object's hitpoints
