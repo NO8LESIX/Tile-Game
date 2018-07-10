@@ -12,8 +12,8 @@ namespace Tile_Game
 {
     public partial class uxUserInterface : Form
     {
-        private int _boardWidth;
-        private int _boardHeight;
+        private int _boardWidth = 8;
+        private int _boardHeight = 8;
         private GameLogic _game;
 
         /// <summary>
@@ -34,46 +34,17 @@ namespace Tile_Game
             uxGameBoard.Height = uxGameBoard.Width + 30;
 
             _game = new GameLogic(_boardHeight, _boardWidth);
-            for (int r = _boardHeight; r > 0; r--)
+            for (int r = _boardHeight - 1; r > 0; r--)
             {
-                for (int c = _boardWidth; c > 0; c++)
+                for (int c = _boardWidth - 1; c > 0; c--)
                 {
 
                     Label tile = new Label();
                     tile.Width = 60;
                     tile.Height = 60;
 
-                    switch (_game.GetTile(r,c).Terrain)
-                    {
-                        case SquareTerrain.Desert:
-                            tile.BackColor = Color.Wheat;
-                            break;
-                        case SquareTerrain.Grass:
-                            tile.BackColor = Color.LawnGreen;
-                            break;
-                        case SquareTerrain.Ice:
-                            tile.BackColor = Color.LightCyan;
-                            break;
-                        case SquareTerrain.River:
-                            tile.BackColor = Color.Aqua;
-                            break;
-                        case SquareTerrain.Snow:
-                            tile.BackColor = Color.Snow;
-                            break;
-                        case SquareTerrain.Woods:
-                            tile.BackColor = Color.ForestGreen;
-                            break;
-                        default:
-                            break;
-                    }
-
-                    switch (_game.GetTile(r, c).objectName)
-                    {
-                        case UnitType.Infantry:
-                            break;
-                        default:
-                            break;
-                    }
+                    tile.BackColor = FindColor(_game.GetTile(r,c).Terrain);
+                    tile.Image = FindImage(_game.GetTile(r, c).objectName);
 
                 }
             }
@@ -98,35 +69,39 @@ namespace Tile_Game
                         square.BackColor = Color.Aqua;
                     }
                     else
-                        square.Ima
-
-
+                        square.Image = FindImage(_game.GetTile(row,column).objectName);
                 }
-                
-                while (currentSquare != null)
-                {
-                    Label square = (Label)uxGameBoard.Controls[currentSquare.Data.Row + "," + currentSquare.Data.Column];
+            }
+        }
+        public Color FindColor(SquareTerrain terrain)
+        {
+            switch (terrain)
+            {
+                case SquareTerrain.Desert:
+                    return Color.Wheat;
+                case SquareTerrain.Grass:
+                    return Color.LawnGreen;
+                case SquareTerrain.Ice:
+                    return Color.LightCyan;
+                case SquareTerrain.River:
+                    return Color.Aqua;
+                case SquareTerrain.Snow:
+                    return Color.Snow;
+                case SquareTerrain.Woods:
+                    return Color.ForestGreen;
+                default:
+                    return Color.Empty;
+            }
+        }
 
-                    if (currentSquare.Data.Selected)
-                    {
-                        square.BackColor = Color.Aqua;
-                    }
-                    else if (currentSquare.Data.Row % 2 == currentSquare.Data.Column % 2)
-                        square.BackColor = Color.White;
-                    else
-                        square.BackColor = Color.Gray;
-
-                    if (currentSquare.Data.Color == SquareColor.Black)
-                        square.Image = _black;
-                    else if (currentSquare.Data.Color == SquareColor.Red)
-                        square.Image = _red;
-                    else
-                        square.Image = null;
-
-
-                    currentSquare = currentSquare.Next;
-                }
-
+        public Image FindImage(UnitType unit)
+        {
+            switch (unit)
+            {
+                case UnitType.Infantry:
+                    return null;
+                default:
+                    return null;
             }
         }
 
@@ -140,10 +115,10 @@ namespace Tile_Game
 
                 RedrawBoard();
 
-                SquareColor win = _game.CheckWin();
-                if (win != SquareColor.None)
+                SquareStatus win = _game.CheckWin();
+                if (win != SquareStatus.None)
                 {
-                    MessageBox.Show("The winner is ");
+                    MessageBox.Show("The winner is: " + win);
                 }
             }
             else
@@ -151,8 +126,14 @@ namespace Tile_Game
                 MessageBox.Show("Invalid move!");
             }
 
-            uxStatusLabel.Text = "Turn: " + _game.Turn;
+            uxTurnLabel.Text = "Turn: " + _game.Turn;
         }
 
+        private void ux8by8_Click(object sender, EventArgs e)
+        {
+            _boardHeight = 8;
+            _boardWidth = 8;
+            DrawGameField();
+        }
     }//end of main
 }//end of namespace

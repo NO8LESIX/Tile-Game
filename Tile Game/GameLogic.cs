@@ -63,9 +63,9 @@ namespace Tile_Game
             //Creates a new tileset size row x column
             _gameBoard = new BoardTile[row, column];
 
-            for (int r = row; row > 0; row--)
+            for (int r = row - 1; row > 0; row--)
             {
-                for (int c = column; c > 0; c--)
+                for (int c = column - 1; c > 0; c--)
                 {
                     BoardTile tile = new BoardTile(r, c);
                     tile.State = SquareStatus.None;
@@ -172,12 +172,12 @@ namespace Tile_Game
 
             }
             catch (Exception ex)
-            {                
+            {
                 return null;
             }
         }
 
-        
+
 
 
     }//end of class
